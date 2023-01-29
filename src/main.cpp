@@ -29,9 +29,15 @@ void setup()
 
   // webServer_setup();
 
-  fs_setup();
+  // fs_setup();
 
-  // pinMode(D7, OUTPUT);
+
+  pinMode(D4, OUTPUT);
+  pinMode(D5, OUTPUT); // 开机键 低电平开机
+  digitalWrite(D5, HIGH);
+
+  pinMode(D7, INPUT);
+  pinMode(D8, INPUT);
   // digitalWrite(D7, HIGH);
 
   // pinMode(D6, OUTPUT);
@@ -57,14 +63,23 @@ String esp_info() {
   doc["info"]["ip"] = localIp;
 
   JsonObject digital_pin = doc.createNestedObject("digital_pin");
+  // pinMode(D0, INPUT);
   digital_pin["D0"] = digitalRead(D0);
+  // pinMode(D1, INPUT);
   digital_pin["D1"] = digitalRead(D1);
+  // pinMode(D2, INPUT);
   digital_pin["D2"] = digitalRead(D2);
+  // pinMode(D3, INPUT);
   digital_pin["D3"] = digitalRead(D3);
+  // pinMode(D4, INPUT);
   digital_pin["D4"] = digitalRead(D4);
+  // pinMode(D5, INPUT);
   digital_pin["D5"] = digitalRead(D5);
+  // pinMode(D6, INPUT);
   digital_pin["D6"] = digitalRead(D6);
+  // pinMode(D7, INPUT);
   digital_pin["D7"] = digitalRead(D7);
+  // pinMode(D8, INPUT);
   digital_pin["D8"] = digitalRead(D8);
   doc["analog_pin"]["A0"] = analogRead(A0);
 
@@ -82,52 +97,52 @@ void client_setup() {
 void deal_touch(String pin, int begin_value, int touch_value = 1000) {
   Serial.println("pin: " + pin + " begin_value: " + begin_value + " touch_value: " + touch_value);
   if(pin == "D0") {
-    pinMode(D0, OUTPUT);
+    // pinMode(D0, OUTPUT);
     digitalWrite(D0, begin_value);
     delay(touch_value);
     digitalWrite(D0, !begin_value);
   } else if(pin == "D1") {
-    pinMode(D1, OUTPUT);
+    // pinMode(D1, OUTPUT);
     digitalWrite(D1, begin_value);
     delay(touch_value);
     digitalWrite(D1, !begin_value);
   } else if(pin == "D2") {
-    pinMode(D2, OUTPUT);
+    // pinMode(D2, OUTPUT);
     digitalWrite(D2, begin_value);
     delay(touch_value);
     digitalWrite(D2, !begin_value);
   } else if(pin == "D3") {
-    pinMode(D3, OUTPUT);
+    // pinMode(D3, OUTPUT);
     digitalWrite(D3, begin_value);
     delay(touch_value);
     digitalWrite(D3, !begin_value);
   } else if(pin == "D4") {
-    pinMode(D4, OUTPUT);
+    // pinMode(D4, OUTPUT);
     digitalWrite(D4, begin_value);
     delay(touch_value);
     digitalWrite(D4, !begin_value);
   } else if(pin == "D5") {
-    pinMode(D5, OUTPUT);
+    // pinMode(D5, OUTPUT);
     digitalWrite(D5, begin_value);
     delay(touch_value);
     digitalWrite(D5, !begin_value);
   } else if(pin == "D6") {
-    pinMode(D6, OUTPUT);
+    // pinMode(D6, OUTPUT);
     digitalWrite(D6, begin_value);
     delay(touch_value);
     digitalWrite(D6, !begin_value);
   } else if(pin == "D7") {
-    pinMode(D7, OUTPUT);
+    // pinMode(D7, OUTPUT);
     digitalWrite(D7, begin_value);
     delay(touch_value);
     digitalWrite(D7, !begin_value);
   } else if(pin == "D8") {
-    pinMode(D8, OUTPUT);
+    // pinMode(D8, OUTPUT);
     digitalWrite(D8, begin_value);
     delay(touch_value);
     digitalWrite(D8, !begin_value);
   } else if(pin == "A0") {
-    pinMode(A0, OUTPUT);
+    // pinMode(A0, OUTPUT);
     analogWrite(A0, begin_value);
     delay(touch_value);
     analogWrite(A0, !begin_value);
@@ -138,34 +153,36 @@ void deal_pin(String pin, int value) {
   Serial.println("pin: " + pin + " value: " + value);
 
   if(pin == "D0") {
-    pinMode(D0, OUTPUT);
+    // pinMode(D0, OUTPUT);
     digitalWrite(D0, value);
   } else if(pin == "D1") {
-    pinMode(D1, OUTPUT);
+    // pinMode(D1, OUTPUT);
     digitalWrite(D1, value);
   } else if(pin == "D2") {
-    pinMode(D2, OUTPUT);
+    // pinMode(D2, OUTPUT);
     digitalWrite(D2, value);
   } else if(pin == "D3") {
-    pinMode(D3, OUTPUT);
+    // pinMode(D3, OUTPUT);
     digitalWrite(D3, value);
   } else if(pin == "D4") {
-    pinMode(D4, OUTPUT);
+    // pinMode(D4, OUTPUT);
     digitalWrite(D4, value);
   } else if(pin == "D5") {
-    pinMode(D5, OUTPUT);
+    // pinMode(D5, OUTPUT);
     digitalWrite(D5, value);
   } else if(pin == "D6") {
-    pinMode(D6, OUTPUT);
+    // pinMode(D6, OUTPUT);
     digitalWrite(D6, value);
   } else if(pin == "D7") {
     pinMode(D7, OUTPUT);
     digitalWrite(D7, value);
+    pinMode(D7, INPUT);
   } else if(pin == "D8") {
     pinMode(D8, OUTPUT);
     digitalWrite(D8, value);
+    pinMode(D7, INPUT);
   } else if(pin == "A0") {
-    pinMode(A0, OUTPUT);
+    // pinMode(A0, OUTPUT);
     analogWrite(A0, value);
   }
   
@@ -210,7 +227,7 @@ void client_loop() {
       Cycle = Cycle + 1;    //防止长时间没有数据造成异常 半个小时重连一次
       delay(10); // 10ms
 
-      if(Cycle >= 180000) // 180000 * 10ms = 30min
+      if(Cycle >= 18000) // 180000 * 10ms = 30min
         break;
     }
   }
@@ -247,6 +264,7 @@ void client_loop() {
   }
 
   client.print("ioT:ESP8266-computer " + esp_info());   //向客户端发送
+  delay(300);
   client.stop();    //停止TCP服务
   DirtyFlag = 1;
 
